@@ -14,15 +14,22 @@
  *    limitations under the License.
  */
 
-package me.mrixs.shortlink;
+package me.mrixs.shortlink.service;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.junit.jupiter.api.Test;
 
-@SpringBootApplication
-public class ShortLinkApplication {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-  public static void main(String[] args) {
-    SpringApplication.run(ShortLinkApplication.class, args);
-  }
+class RandomStringImplTest {
+    RandomString randomString = new RandomStringImpl();
+    int randomStringLength = 10;
+
+    @Test
+    void getRandomString() {
+        String genertedString = randomString.getRandomString(randomStringLength);
+        assertNotNull(genertedString);
+        assertEquals(randomStringLength, genertedString.length());
+
+    }
 }

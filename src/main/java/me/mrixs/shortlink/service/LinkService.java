@@ -14,15 +14,12 @@
  *    limitations under the License.
  */
 
-package me.mrixs.shortlink;
+package me.mrixs.shortlink.service;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import me.mrixs.shortlink.model.Link;
 
-@SpringBootApplication
-public class ShortLinkApplication {
+public interface LinkService {
+  Link getShortLink(String longLink);
 
-  public static void main(String[] args) {
-    SpringApplication.run(ShortLinkApplication.class, args);
-  }
+  Link getLongLink(String shortLink);
 }

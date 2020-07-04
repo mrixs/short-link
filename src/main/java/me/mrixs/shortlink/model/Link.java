@@ -31,6 +31,6 @@ import java.util.UUID;
 public class Link {
   @Id
   private UUID id;
-  private String longUrl;
-  private String shortUrl;
+  private String longLink;
+  private String shortLink;
 }
