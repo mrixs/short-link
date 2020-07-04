@@ -14,23 +14,13 @@
  *    limitations under the License.
  */
 
-package me.mrixs.shortlink.model;
+package me.mrixs.shortlink.repository;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import me.mrixs.shortlink.model.Link;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.util.UUID;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-public class Link {
-  @Id
-  private UUID id;
-  private String longUrl;
-  private String shortUrl;
+public interface LinkRepository extends JpaRepository<Link, UUID> {
+
 }
