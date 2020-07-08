@@ -19,7 +19,9 @@ package me.mrixs.shortlink.service;
 import lombok.AllArgsConstructor;
 import me.mrixs.shortlink.model.Link;
 import me.mrixs.shortlink.repository.LinkRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -45,6 +47,8 @@ public class LinkServiceImpl implements LinkService {
 
   @Override
   public Link getLongLink(String shortLink) {
-    return linkRepository.findByShortLink(shortLink);
+    Link link = linkRepository.findByShortLink(shortLink);
+    if (link == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Link not found.");
+    return link;
   }
 }
