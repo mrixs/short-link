@@ -22,7 +22,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -30,7 +29,6 @@ import java.util.UUID;
 @Entity
 public class Link {
   @Id
-  private UUID id;
   private String longLink;
   private String shortLink;
 }

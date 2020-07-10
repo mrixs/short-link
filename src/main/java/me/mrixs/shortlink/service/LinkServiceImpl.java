@@ -23,8 +23,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.UUID;
-
 @Service
 @AllArgsConstructor
 public class LinkServiceImpl implements LinkService {
@@ -33,7 +31,6 @@ public class LinkServiceImpl implements LinkService {
 
   @Override
   public Link getShortLink(String longLink) {
-    UUID id = UUID.randomUUID();
     String shortLink = randomString.getRandomString(6);
     Link link = linkRepository.findByShortLink(shortLink);
     if (link != null && longLink.equals(link.getLongLink())) return link;
@@ -41,7 +38,7 @@ public class LinkServiceImpl implements LinkService {
       shortLink = randomString.getRandomString(6);
       link = linkRepository.findByShortLink(shortLink);
     }
-    link = new Link(id, longLink, shortLink);
+    link = new Link(longLink, shortLink);
     return linkRepository.save(link);
   }
 
