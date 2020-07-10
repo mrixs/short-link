@@ -1,0 +1,85 @@
+<!--
+  ~ Copyright 2020 Vladimir Zagainov
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Link Shortener</title>
+    <link href="/webjars/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        .vertical-center {
+            min-height: 100%; /* Fallback for browsers do NOT support vh unit */
+            min-height: 100vh; /* These two lines are counted as one :-)       */
+
+            display: flex;
+            align-items: center;
+        }</style>
+</head>
+<body class="bg-light">
+<div class="vertical-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col col-xl-6 col-lg-8 col-md-10 col-sm-12 col-xs-12 shadow-lg rounded bg-light">
+                <h1>Simple Link shortener</h1>
+                <div class="form-group" id="request-form">
+                    <form action="javascript:getShort()" id="link-shortener-form">
+                        <label for="long-link">Link</label>
+                        <input class="form-control" id="long-link" type="text">
+                        <input class="btn " id="submit-long-link" type="submit" value="Short link">
+                    </form>
+                </div>
+                <div class="d-none" id="response">
+                    <p>Shorted link: <span class="font-weight-bolder" id="short-link"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+<script src="/webjars/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<script>
+    const getShort = function () {
+        $("#long-link").prop("disabled", true);
+        $("#submit-long-link").prop("disabled", true);
+        let link = {
+            "longLink": $("#long-link").val()
+        };
+        $.ajax({
+            type: "POST",
+            url: "/api/link",
+            datatype: "json",
+            contentType: "application/json",
+            async: false,
+            data: JSON.stringify(link),
+            success: function (data) {
+                let shortLink = location.protocol
+                    .concat("//")
+                    .concat(location.hostname)
+                    .concat(":")
+                    .concat(location.port)
+                    .concat("/l/")
+                    .concat(data.shortLink);
+
+                $("#short-link").text(shortLink);
+                $("#request-form").hide("slow");
+                $("#response").prop("class", "d-block").show("slow");
+            }
+        })
+    };
+</script>
+</body>
+</html>
