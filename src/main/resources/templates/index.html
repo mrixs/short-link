@@ -35,6 +35,7 @@
         <div class="row justify-content-center">
             <div class="col col-xl-6 col-lg-8 col-md-10 col-sm-12 col-xs-12 shadow-lg rounded bg-light">
                 <h1>Simple Link shortener</h1>
+                <p class="d-none" id="error-message"></p>
                 <div class="form-group" id="request-form">
                     <form action="javascript:getShort()" id="link-shortener-form">
                         <label for="long-link">Link</label>
@@ -55,6 +56,7 @@
     const getShort = function () {
         $("#long-link").prop("disabled", true);
         $("#submit-long-link").prop("disabled", true);
+        $("#error-message").prop("class", "d-none").hide("slow");
         let link = {
             "longLink": $("#long-link").val()
         };
@@ -73,10 +75,18 @@
                     .concat(location.port)
                     .concat("/l/")
                     .concat(data.shortLink);
-
                 $("#short-link").text(shortLink);
                 $("#request-form").hide("slow");
                 $("#response").prop("class", "d-block").show("slow");
+            },
+            error: function (jqXHR) {
+                let status = jqXHR.status;
+                let errorMessage = jqXHR.responseJSON.message;
+                if (status == 400 && errorMessage === "URL is not correct") {
+                    $("#long-link").prop("disabled", false);
+                    $("#submit-long-link").prop("disabled", false);
+                    $("#error-message").prop("class", "d-block alert alert-danger").show("slow").text(errorMessage);
+                }
             }
         })
     };

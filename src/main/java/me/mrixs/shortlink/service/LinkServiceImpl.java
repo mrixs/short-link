@@ -23,6 +23,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 @Service
 @AllArgsConstructor
 public class LinkServiceImpl implements LinkService {
@@ -32,6 +35,12 @@ public class LinkServiceImpl implements LinkService {
   @Override
   public Link getShortLink(String longLink) {
     String shortLink = randomString.getRandomString(6);
+    try {
+      new URI(longLink);
+    } catch (URISyntaxException e) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "URL is not correct");
+    }
+
     Link link = linkRepository.findByShortLink(shortLink);
     if (link != null && longLink.equals(link.getLongLink())) return link;
     while (link != null) {
