@@ -19,9 +19,13 @@ package me.mrixs.shortlink.service;
 import lombok.AllArgsConstructor;
 import me.mrixs.shortlink.model.Link;
 import me.mrixs.shortlink.repository.LinkRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @Service
 @AllArgsConstructor
@@ -30,8 +34,15 @@ public class LinkServiceImpl implements LinkService {
   private final LinkRepository linkRepository;
 
   @Override
+  @Cacheable("short-link-creation")
   public Link getShortLink(String longLink) {
     String shortLink = randomString.getRandomString(6);
+    try {
+      new URI(longLink);
+    } catch (URISyntaxException e) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "URL is not correct");
+    }
+
     Link link = linkRepository.findByShortLink(shortLink);
     if (link != null && longLink.equals(link.getLongLink())) return link;
     while (link != null) {
@@ -43,6 +54,7 @@ public class LinkServiceImpl implements LinkService {
   }
 
   @Override
+  @Cacheable("getting-long-link")
   public Link getLongLink(String shortLink) {
     Link link = linkRepository.findByShortLink(shortLink);
     if (link == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Link not found.");
