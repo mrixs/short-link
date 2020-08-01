@@ -38,7 +38,9 @@ public class LinkServiceImpl implements LinkService {
   public Link getShortLink(String longLink) {
     String shortLink = randomString.getRandomString(6);
     try {
-      new URI(longLink);
+      if (new URI(longLink).getScheme() == null) {
+        longLink = "http://" + longLink;
+      }
     } catch (URISyntaxException e) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "URL is not correct");
     }
